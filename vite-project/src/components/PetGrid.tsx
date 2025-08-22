@@ -4,6 +4,7 @@ import type { Pet } from "../Pet";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { PetCard } from "./PetCard";
+import PetDetails from "./PetDetails.tsx";
 
 export default function PetGrid() {
     const [allPets, setAllPets] = useAtom<Pet[]>(AllPetsAtom);
@@ -39,21 +40,30 @@ export default function PetGrid() {
     return (
         <div className="min-h-screen bg-gray-100">
             <div className="max-w-6xl mx-auto p-6">
-                <h1 className="text-2xl font-bold mb-4">Available Pets</h1>
+                <div className="flex items-center justify-between mb-6">
+                    <h1 className="text-2xl font-bold">Available Pets</h1>
+                    <button
+                        onClick={() => navigate("/add-pet")}
+                        className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium shadow hover:bg-blue-700 transition"
+                    >
+                        + Add New Pet
+                    </button>
+                </div>
+
 
                 {/* Loading skeletons */}
                 {status === "loading" && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {Array.from({ length: 8 }).map((_, i) => (
+                        {Array.from({length: 8}).map((_, i) => (
                             <div
                                 key={i}
                                 className="w-80 h-72 bg-white rounded-2xl shadow animate-pulse"
                             >
-                                <div className="h-44 bg-gray-200 rounded-t-2xl" />
+                                <div className="h-44 bg-gray-200 rounded-t-2xl"/>
                                 <div className="p-4 space-y-3">
-                                    <div className="h-4 bg-gray-200 rounded" />
-                                    <div className="h-3 bg-gray-200 rounded w-2/3" />
-                                    <div className="h-9 bg-gray-200 rounded-xl" />
+                                    <div className="h-4 bg-gray-200 rounded"/>
+                                    <div className="h-3 bg-gray-200 rounded w-2/3"/>
+                                    <div className="h-9 bg-gray-200 rounded-xl"/>
                                 </div>
                             </div>
                         ))}
@@ -76,7 +86,8 @@ export default function PetGrid() {
 
                 {/* Grid */}
                 {status === "ready" && allPets.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
+                    <div
+                        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
                         {allPets.map((pet) => (
                             <PetCard
                                 key={pet.id!}

@@ -1,11 +1,7 @@
-// src/App.tsx
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
-import type {Pet} from "./Pet.ts";
-import  PetDetails from "./components/PetDetails";
-import {useAtom} from "jotai";
-import {AllPetsAtom} from "./AllPets.tsx";
+import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
+import PetDetails from "./components/PetDetails";
 import PetGrid from "./components/PetGrid.tsx";
-import {PetCard} from "./components/PetCard.tsx";
+import {AddNewPet} from "./components/AddNewPet.jsx";
 
 function HomePage() {
     const navigate = useNavigate();
@@ -20,6 +16,7 @@ export default function App() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/pet/:petId" element={<PetDetails/>} />
+                <Route path="/add-pet" element={<AddNewPet/>} />
             </Routes>
         </BrowserRouter>
     );
