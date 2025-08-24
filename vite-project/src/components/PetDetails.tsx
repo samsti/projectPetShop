@@ -1,15 +1,15 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useAtom } from "jotai";
-import { AllPetsAtom } from "../AllPets";
-import type { Pet } from "../Pet";
+import {useParams, useNavigate} from "react-router-dom";
+import {useAtom} from "jotai";
+import {AllPetsAtom} from "../AllPets";
+import type {Pet} from "../Pet";
 import trashIcon from "../assets/trash-3.png"
 
 export default function PetDetails() {
-    const { petId } = useParams<{ petId: string }>();
+    const {petId} = useParams<{ petId: string }>();
     const [allPets] = useAtom<Pet[]>(AllPetsAtom);
     const navigate = useNavigate();
-    const { id } = useParams();
-    const API = "https://api-divine-grass-2111.fly.dev";
+    const {id} = useParams();
+    const API = import.meta.env.VITE_API_BASE_URL;
 
 
     const pet = allPets.find((p) => String(p.id) === petId);
@@ -34,7 +34,7 @@ export default function PetDetails() {
         if (!confirm(`Delete ${pet.name}?`)) return;
 
         try {
-            const res = await fetch(`${API}/DeletePet?id=${pet.id}`, { method: "DELETE" });
+            const res = await fetch(`${API}/DeletePet?id=${pet.id}`, {method: "DELETE"});
             const data = await res.json().catch(() => null);
 
             if (!res.ok) {
@@ -57,9 +57,7 @@ export default function PetDetails() {
                     ← Go Back
                 </button>
 
-                {/* Card */}
                 <div className="bg-white rounded-3xl shadow overflow-hidden grid md:grid-cols-2">
-                    {/* Big image */}
                     <div className="relative">
                         <img
                             src={pet.imgurl}
@@ -74,7 +72,6 @@ export default function PetDetails() {
                         )}
                     </div>
 
-                    {/* Details */}
                     <div className="p-6 md:p-8 flex flex-col">
                         <div className="mb-4">
                             <div className="flex items-center justify-between">
@@ -90,7 +87,6 @@ export default function PetDetails() {
 
                         </div>
 
-                        {/* Quick facts */}
                         <div className="grid grid-cols-2 gap-4 mb-6">
                             {"age" in pet && pet.age && (
                                 <div>
@@ -126,21 +122,26 @@ export default function PetDetails() {
                             )}
                         </div>
 
-                        {/* Description (if present) */}
                         {"description" in pet && (pet as any).description && (
                             <p className="text-gray-700 leading-relaxed mb-6">
                                 {(pet as any).description}
                             </p>
                         )}
 
-                        {/* Actions */}
-
-                        <button
-                            onClick={() => navigate("/")}
-                            className="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 transition"
-                        >
-                            Back to Pets
-                        </button>
+                        <div className="flex items-center justify-between">
+                            <button
+                                onClick={() => navigate("/")}
+                                className="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 transition w-full"
+                            >
+                                Back to Pets
+                            </button>
+                            <button
+                                onClick={() => navigate(`/edit-pet/${pet.id}`)}
+                                className="px-5 py-3 rounded-xl bg-green-500 hover:bg-green-400 text-white transition w-full ml-2"
+                            >
+                                Edit
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

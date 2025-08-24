@@ -1,10 +1,9 @@
-import { useAtom } from "jotai";
-import { AllPetsAtom } from "../AllPets";
-import type { Pet } from "../Pet";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { PetCard } from "./PetCard";
-import PetDetails from "./PetDetails.tsx";
+import {useAtom} from "jotai";
+import {AllPetsAtom} from "../AllPets";
+import type {Pet} from "../Pet";
+import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {PetCard} from "./PetCard";
 
 export default function PetGrid() {
     const [allPets, setAllPets] = useAtom<Pet[]>(AllPetsAtom);
@@ -13,6 +12,7 @@ export default function PetGrid() {
     );
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const API = import.meta.env.VITE_API_BASE_URL;
 
     useEffect(() => {
         const ac = new AbortController();
@@ -20,7 +20,7 @@ export default function PetGrid() {
         (async () => {
             try {
                 setStatus("loading");
-                const res = await fetch("https://api-divine-grass-2111.fly.dev/GetPets", {
+                const res = await fetch(`${API}/GetPets`, {
                     signal: ac.signal,
                 });
                 if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
@@ -51,7 +51,6 @@ export default function PetGrid() {
                 </div>
 
 
-                {/* Loading skeletons */}
                 {status === "loading" && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {Array.from({length: 8}).map((_, i) => (
@@ -70,21 +69,18 @@ export default function PetGrid() {
                     </div>
                 )}
 
-                {/* Error state */}
                 {status === "error" && (
                     <div className="bg-red-50 text-red-700 p-4 rounded-xl">
                         Failed to load pets. {error && <span>({error})</span>}
                     </div>
                 )}
 
-                {/* Empty state */}
                 {status === "ready" && allPets.length === 0 && (
                     <div className="text-center text-gray-600 bg-white rounded-2xl p-10 shadow">
-                        🐾 No pets available right now.
+                        No pets available right now
                     </div>
                 )}
 
-                {/* Grid */}
                 {status === "ready" && allPets.length > 0 && (
                     <div
                         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">

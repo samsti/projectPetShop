@@ -1,11 +1,11 @@
-import { useState } from "react";
-import type { Pet } from "../Pet";
-import { useNavigate } from "react-router-dom";
+import {useState} from "react";
+import type {Pet} from "../Pet";
+import {useNavigate} from "react-router-dom";
 
 export function AddNewPet() {
     const navigate = useNavigate();
+    const API = import.meta.env.VITE_API_BASE_URL;
 
-    // API expects only these three fields
     const [form, setForm] = useState<Omit<Pet, "id" | "sold">>({
         name: "",
         breed: "",
@@ -16,8 +16,8 @@ export function AddNewPet() {
     const [error, setError] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setForm((prev) => ({...prev, [name]: value}));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -26,14 +26,13 @@ export function AddNewPet() {
         setError(null);
 
         try {
-            // NOTE: if your backend route is /AddPet (not /CreatePet), change it below
-            const res = await fetch("https://api-divine-grass-2111.fly.dev/CreatePet", {
+            const res = await fetch(`${API}/CreatePet`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 },
-                body: JSON.stringify(form), // <-- send the form values
+                body: JSON.stringify(form),
             });
 
             if (!res.ok) {
@@ -41,7 +40,7 @@ export function AddNewPet() {
                 throw new Error(`${res.status} ${res.statusText} – ${text}`);
             }
 
-            navigate("/"); // go back to list
+            navigate("/");
         } catch (err: any) {
             setError(err.message ?? "Failed to create pet");
             console.error(err);
